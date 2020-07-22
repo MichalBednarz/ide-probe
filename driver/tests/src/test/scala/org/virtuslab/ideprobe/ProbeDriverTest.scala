@@ -99,6 +99,39 @@ final class ProbeDriverTest extends IntegrationTestSuite with Assertions {
     }
   }
 
+  @Test
+  def listsAllSourceRoots(): Unit = {
+    fixture.copy(workspaceTemplate = WorkspaceTemplate.FromResource("gradle-project")).run { intelliJ =>
+      val projectDir = intelliJ.workspace.resolve("build.gradle")
+      val p = intelliJ.probe.openProject(projectDir)
+
+      val main = ModuleRef("foo.main", p)
+      val test = ModuleRef("foo.test", p)
+
+      val src = intelliJ.workspace.resolve("src")
+
+      assertEquals(List(src.resolve("main/java")), intelliJ.probe.moduleSourceRoots(main))
+      assertEquals(List(src.resolve("main/resources")), intelliJ.probe.moduleResourceRoots(main))
+
+      assertEquals(List(src.resolve("test/java")), intelliJ.probe.moduleTestSourceRoots(test))
+      assertEquals(List(src.resolve("test/resources")), intelliJ.probe.moduleTestResourceRoots(test))
+    }
+  }
+
+  @Test
+  def listsModuleDependencies(): Unit = {
+    fixture.copy(workspaceTemplate = WorkspaceTemplate.FromResource("gradle-project")).run { intelliJ =>
+      val projectDir = intelliJ.workspace.resolve("build.gradle")
+      val p = intelliJ.probe.openProject(projectDir)
+
+      val main = ModuleRef("foo.main", p)
+      val test = ModuleRef("foo.test", p)
+
+      val testDependencies = intelliJ.probe.moduleDependencies(test)
+      assertEquals(List(main), println(testDependencies))
+    }
+  }
+
   @Ignore
   @Test
   def buildProjectTest(): Unit = {

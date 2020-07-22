@@ -214,6 +214,33 @@ final class ProbeDriver(protected val connection: JsonRpcConnection)(implicit pr
   def projectSdk(project: ProjectRef = ProjectRef.Default): Option[String] = send(Endpoints.ProjectSdk, project)
 
   /**
+   * Returns the module dependencies of the specified module
+   */
+  def moduleDependencies(module: ModuleRef): Seq[ModuleRef] = send(Endpoints.ModuleDependencies, module)
+
+  /**
+   * Returns the source roots of the specified module
+   */
+  def moduleSourceRoots(module: ModuleRef): Seq[Path] = send(Endpoints.ModuleSources, module)
+
+  /**
+   * Returns the resource roots of the specified module
+   */
+  def moduleResourceRoots(module: ModuleRef): Seq[Path] = send(Endpoints.ModuleResources, module)
+
+  /**
+   * Returns the test source roots of the specified module
+   */
+  def moduleTestSourceRoots(module: ModuleRef): Seq[Path] = send(Endpoints.ModuleTestSources, module)
+
+  /**
+   * Returns the test resource roots of the specified module
+   */
+  def moduleTestResourceRoots(module: ModuleRef): Seq[Path] = send(Endpoints.ModuleTestResources, module)
+
+
+
+  /**
    * Returns the sdk of the specified module
    */
   def moduleSdk(module: ModuleRef): Option[String] = send(Endpoints.ModuleSdk, module)
