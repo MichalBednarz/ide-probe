@@ -104,8 +104,17 @@ lazy val junitDriver = module("junit-driver", "driver/bindings/junit")
 lazy val scalaTests = testModule("scala-tests", "extensions/scala/tests")
   .dependsOn(junitDriver)
 
+lazy val scalaProbePlugin = ideaPluginModule("scala-probe", "extensions/scala/probe", publish = true)
+  .dependsOn(probePlugin, driver, junitDriver)
+  .settings(
+    intellijPluginName := "ideprobe-scala",
+//    intellijPlugins += "https://plugins.jetbrains.com/plugin/download?pluginId=org.intellij.scala&version=2020.2.734&channel=nightly".toPlugin,
+    intellijPlugins += "org.intellij.scala:2020.2.734".toPlugin,
+    name := "scala-probe-plugin"
+  )
+
 lazy val examples = testModule("examples", "examples")
-  .dependsOn(junitDriver)
+  .dependsOn(junitDriver, scalaProbePlugin)
   .settings(libraryDependencies += Dependencies.junitJupiterParams)
 
 val commonSettings = Seq(
