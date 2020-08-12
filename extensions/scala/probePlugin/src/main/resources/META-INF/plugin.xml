@@ -9,10 +9,7 @@
     <depends>org.intellij.scala</depends>
     <idea-version since-build="191.*" until-build="201.*"/>
 
-<!--    <extensions defaultExtensionNs="org.virtuslab.ideprobe">-->
-<!--        <probeHandlerContributor implementation="org.virtuslab.intellij.scala.probe.SbtProbeHandlerContributor"/>-->
-<!--    </extensions>-->
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationInitializedListener implementation="org.virtuslab.intellij.scala.probe.Initialize"/>
+    <extensions defaultExtensionNs="org.virtuslab.ideprobe">
+        <probeHandlerContributor implementation="org.virtuslab.intellij.scala.probe.SbtProbeHandlerContributor"/>
     </extensions>
 </idea-plugin>

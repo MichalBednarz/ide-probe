@@ -7,7 +7,6 @@ import org.virtuslab.intellij.scala.protocol.{SbtEndpoints, SbtProjectSettings, 
 object SbtProbeDriver {
   val pluginId = "org.virtuslab.ideprobe.scalaplugin"
 
-
   def apply(driver: ProbeDriver): SbtProbeDriver = driver.as(pluginId, new SbtProbeDriver(_))
 }
 
@@ -22,13 +21,4 @@ final class SbtProbeDriver(val driver: ProbeDriver) extends AnyVal {
                            ): Unit = {
     driver.send(SbtEndpoints.ChangeSbtProjectSettings, (project, settings))
   }
-
-  //  def compileAllTargets(): Unit = {
-  //    driver.invokeAction("com.twitter.intellij.pants.compiler.actions.PantsCompileAllTargetsAction")
-  //    val compiledNotification = driver.awaitNotification("Compile message")
-  //
-  //    if (compiledNotification.severity != IdeNotification.Severity.Info) {
-  //      throw new IllegalStateException("Compilation failed")
-  //    }
-  //  }
 }

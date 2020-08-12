@@ -16,9 +16,9 @@ trait ProbeHandlerContributor {
 object ProbeHandlers {
   val EP_NAME = ExtensionPointName.create[ProbeHandlerContributor]("org.virtuslab.ideprobe.probeHandlerContributor")
 
-  private var handler: JsonRpc.Handler = collectHandlers()
-
   private var extensions: List[ProbeHandlerContributor] = Nil
+
+  private var handler: JsonRpc.Handler = collectHandlers()
 
   def registerHandler(contributor: ProbeHandlerContributor): Unit = extensions ::= contributor
 
@@ -36,8 +36,7 @@ object ProbeHandlers {
   def get(): JsonRpc.Handler = handler
 
   private def collectHandlers(): ProbeHandler = {
-    //(EP_NAME.getExtensions() ++ extensions)
-    EP_NAME.getExtensions()
+    (EP_NAME.getExtensions() ++ extensions)
       .foldLeft(new ProbeHandler())((handler, contributor) => contributor.registerHandlers(handler))
   }
 
