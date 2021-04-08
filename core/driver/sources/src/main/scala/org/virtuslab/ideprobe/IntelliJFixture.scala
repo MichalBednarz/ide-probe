@@ -3,7 +3,7 @@ package org.virtuslab.ideprobe
 import java.nio.file.Path
 
 import org.virtuslab.ideprobe.Extensions._
-import org.virtuslab.ideprobe.config.{IdeProbeConfig, PathsConfig}
+import org.virtuslab.ideprobe.config.{IdeProbeConfig, IntelliJProvider, PathsConfig}
 import org.virtuslab.ideprobe.dependencies.{IntelliJVersion, Plugin}
 import org.virtuslab.ideprobe.ide.intellij.{InstalledIntelliJ, IntelliJFactory, RunningIde}
 
@@ -80,7 +80,8 @@ final case class IntelliJFixture(
   }
 
   def installIntelliJ(): InstalledIntelliJ = {
-    val installedIntelliJ = factory.create(version, plugins)
+//    val factory = factory.create(version, plugins)
+    val installedIntelliJ = IntelliJProvider.setup(intelliJPaths)
     afterIntelliJInstall.foreach(_.apply(this, installedIntelliJ))
     installedIntelliJ
   }

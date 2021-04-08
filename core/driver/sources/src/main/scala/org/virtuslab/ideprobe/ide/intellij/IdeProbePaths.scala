@@ -3,7 +3,7 @@ package org.virtuslab.ideprobe.ide.intellij
 import java.nio.file.Path
 import org.virtuslab.ideprobe.Extensions._
 
-final class IntelliJPaths(root: Path, headless: Boolean) {
+final class IdeProbePaths(root: Path, headless: Boolean) {
   val config: Path = root.createDirectory("config")
   val system: Path = root.createDirectory("system")
   val plugins: Path = root.createDirectory("plugins")

@@ -13,7 +13,7 @@ import org.virtuslab.ideprobe.jsonrpc.JsonRpcConnection
 import scala.concurrent.{ExecutionContext, blocking}
 
 final class InstalledIntelliJ(val root: Path, probePaths: IdeProbePaths, config: DriverConfig) {
-  val paths: IntelliJPaths = new IntelliJPaths(root, config.headless)
+  val paths: IdeProbePaths = new IdeProbePaths(root, config.headless)
 
   private val vmoptions: Path = {
     val baseVMOptions = Seq(

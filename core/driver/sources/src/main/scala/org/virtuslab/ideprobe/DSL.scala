@@ -3,14 +3,14 @@ package org.virtuslab.ideprobe
 import java.nio.file.Path
 
 import org.virtuslab.ideprobe.ide.intellij.InstalledIntelliJ
-import org.virtuslab.ideprobe.ide.intellij.IntelliJPaths
+import org.virtuslab.ideprobe.ide.intellij.IdeProbePaths
 import org.virtuslab.ideprobe.reporting.AfterTestChecks
 
 final class RunningIntelliJFixture(
     val workspace: Path,
     val probe: ProbeDriver,
     val config: Config,
-    val intelliJPaths: IntelliJPaths
+    val intelliJPaths: IdeProbePaths
 )
 
 final class RunnableIntelliJFixture(
@@ -22,7 +22,7 @@ final class RunnableIntelliJFixture(
 
   def config: Config = fixture.config
 
-  def intelliJPaths: IntelliJPaths = installedIntelliJ.paths
+  def intelliJPaths: IdeProbePaths = installedIntelliJ.paths
 
   def runIntellij[A](action: RunningIntelliJFixture => A): A = {
     val running = fixture.startIntelliJ(path, installedIntelliJ)
