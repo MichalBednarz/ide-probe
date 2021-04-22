@@ -27,13 +27,13 @@ final class InstalledIntelliJ(val root: Path, probePaths: IdeProbePaths, config:
   }
 
   private val ideaProperties: Path = {
-    val content = s"""|idea.config.path=${paths.config}
-                      |idea.system.path=${paths.system}
-                      |idea.plugins.path=${paths.plugins}
-                      |idea.log.path=${paths.logs}
-                      |java.util.prefs.userRoot=${paths.userPrefs}
+    val content = s"""|idea.config.path=${paths.config.toString.replace("\\", "/")}
+                      |idea.system.path=${paths.system.toString.replace("\\", "/")}
+                      |idea.plugins.path=${paths.plugins.toString.replace("\\", "/")}
+                      |idea.log.path=${paths.logs.toString.replace("\\", "/")}
+                      |java.util.prefs.userRoot=${paths.userPrefs.toString.replace("\\", "/")}
                       |""".stripMargin
-
+// idea.initially.ask.config=force-not
     root.resolve("bin/idea.properties").write(content)
   }
 

@@ -1,12 +1,13 @@
 package org.virtuslab.ideprobe.dependencies
 
+import com.intellij.util.{Url, Urls}
+
 import java.net.{HttpURLConnection, URI}
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.zip.ZipInputStream
-
 import org.virtuslab.ideprobe.ConfigFormat
 import org.virtuslab.ideprobe.Extensions._
 import pureconfig.ConfigReader
@@ -30,11 +31,20 @@ object Resource extends ConfigFormat {
 
   def from(value: String): Resource = {
     try {
-      from(URI.create(value))
+      from(toUri(value))
     } catch {
       case NonFatal(e) =>
         Unresolved(value, e)
     }
+  }
+
+  // if value is windows path then URI.create throws IllegalArgumentException
+  // because of : in C:\.
+  def toUri(value: String): URI = try {
+      URI.create(value)
+    } catch {
+      case NonFatal(_) =>
+        Paths.get(value).toUri
   }
 
   @scala.annotation.tailrec

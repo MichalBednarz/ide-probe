@@ -2,7 +2,6 @@ package org.virtuslab.ideprobe.dependencies
 
 import java.nio.file.Files
 import java.util.concurrent.Executors
-
 import org.junit.Assert._
 import org.junit.Test
 import org.virtuslab.ideprobe.Extensions._
@@ -29,7 +28,7 @@ final class FixtureConfigTest extends WorkspaceFixture {
   @Test
   def usesProvidedWorkspaceDirectory(): Unit = withWorkspace { workspace =>
     val file = Files.createTempFile(workspace, "ideprobe", "file")
-    val config = Config.fromString(s"""probe.workspace.path = "$workspace" """)
+    val config = Config.fromString(s"""probe.workspace.path = "${workspace.toUri}" """)
 
     IntelliJFixture.fromConfig(config).withWorkspace { workspace =>
       val workspaceFile = workspace.path.resolve(file.getFileName)
@@ -39,10 +38,7 @@ final class FixtureConfigTest extends WorkspaceFixture {
 
   @Test
   def exposesEnvironmentFromConfigFile(): Unit = withWorkspace { workspace =>
-    val config = Config.fromString(s"""
-         |probe.workspace.path = "$workspace"
-         |key = "value"
-         |""".stripMargin)
+    val config = Config.fromClasspath("environment.conf")
 
     val rule = IntelliJFixture.fromConfig(config)
 

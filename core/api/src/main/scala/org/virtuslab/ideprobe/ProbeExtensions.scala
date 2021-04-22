@@ -1,10 +1,6 @@
 package org.virtuslab.ideprobe
 
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.InputStream
-import java.io.IOException
-import java.io.OutputStream
+import java.io.{BufferedInputStream, BufferedOutputStream, File, IOException, InputStream, OutputStream}
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
@@ -113,12 +109,32 @@ trait ProbeExtensions {
     }
 
     def makeExecutable(): Path = {
-      import java.nio.file.attribute.PosixFilePermission._
-      val attributes = Files.getPosixFilePermissions(path)
-      attributes.add(OWNER_EXECUTE)
-      attributes.add(GROUP_EXECUTE)
-      attributes.add(OTHERS_EXECUTE)
-      Files.setPosixFilePermissions(path, attributes)
+      val os = System.getProperty("os.name").toLowerCase()
+      if (os.startsWith("win")) {
+        import java.nio.file.attribute._
+        val view = Files.getFileAttributeView(path, classOf[AclFileAttributeView])
+        val owner = view.getOwner
+        val acl = view.getAcl
+        val it = acl.listIterator
+        val entry = AclEntry.newBuilder
+          .setType(AclEntryType.ALLOW)
+          .setPrincipal(owner)
+          .setPermissions(AclEntryPermission.DELETE, AclEntryPermission.DELETE_CHILD)
+          .build
+        acl.add(entry)
+        view.setAcl(acl)
+
+        path
+      }
+      else {
+        import java.nio.file.attribute.PosixFilePermission._
+        val attributes = Files.getPosixFilePermissions(path)
+
+        attributes.add(OWNER_EXECUTE)
+        attributes.add(GROUP_EXECUTE)
+        attributes.add(OTHERS_EXECUTE)
+        Files.setPosixFilePermissions(path, attributes)
+      }
     }
 
     def delete(): Unit = {
@@ -196,8 +212,12 @@ trait ProbeExtensions {
 
 object ProbeExtensions {
   private class DeletingVisitor(root: Path) extends SimpleFileVisitor[Path] {
-    override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
-      if (!attrs.isDirectory) Files.delete(file)
+    override def visitFile(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      if (!attrs.isDirectory){
+        val file = path.toFile
+        if(!Files.isWritable(path)) file.setWritable(true)
+        file.delete()
+      }
       FileVisitResult.CONTINUE
     }
 

@@ -1,5 +1,7 @@
 package org.virtuslab.ideprobe.dependencies
 
+import com.intellij.util.Urls
+
 import java.io.InputStream
 import java.net.URI
 import java.nio.file.{Files, Path}

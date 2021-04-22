@@ -2,8 +2,8 @@ package org.virtuslab.ideprobe
 
 import java.net.URL
 import java.nio.charset.Charset
-
 import com.intellij.remoterobot.utils.WaitForConditionTimeoutException
+import com.zaxxer.nuprocess.{NuAbstractProcessHandler, NuProcessBuilder}
 import org.apache.commons.io.IOUtils
 import org.junit.Assert._
 import org.junit.{Ignore, Test}
@@ -15,6 +15,7 @@ import org.virtuslab.ideprobe.protocol.TestStatus.Passed
 import org.virtuslab.ideprobe.protocol._
 import org.virtuslab.ideprobe.robot.RobotPluginExtension
 
+import java.nio.ByteBuffer
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
@@ -28,7 +29,7 @@ final class ProbeDriverTest extends IdeProbeFixture with Assertions with RobotPl
   private val fixture = IntelliJFixture(
     version = intellijVersion,
     plugins = List(scalaPlugin, probeTestPlugin)
-  ).enableExtensions
+  ).enableExtensions//.withVmOptions("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005")
 
   @Test
   def listsPlugins(): Unit = fixture.run { intelliJ =>
